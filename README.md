@@ -1,0 +1,358 @@
+Project 1: calculator-app
+
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "calculator"
+        IMAGE_TAG  = "v1"
+        CONTAINER_NAME = "calculatorapp"
+        APP_PORT = "4001"
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    credentialsId: 'github-pat',
+                    url: 'https://github.com/karthikraj98/Docker_project.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                cd Projects/calculator
+                docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                '''
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                sh '''
+                docker rm -f ${CONTAINER_NAME} || true
+                '''
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh '''
+                docker run -d \
+                  --name ${CONTAINER_NAME} \
+                  --rm -p ${APP_PORT}:${APP_PORT} \
+                  ${IMAGE_NAME}:${IMAGE_TAG}
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Calculator app deployed successfully!"
+            echo "🌐 Access: http://<JENKINS_SERVER_IP>:4001"
+        }
+        failure {
+            echo "❌ Pipeline failed"
+        }
+    }
+}
+
+
+Project 2: docker-demo
+
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "dockerapp"
+        IMAGE_TAG  = "v1"
+        CONTAINER_NAME = "dockerapp"
+        APP_PORT = "3001"
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    credentialsId: 'github-pat',
+                    url: 'https://github.com/karthikraj98/Docker_project.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                cd Projects/testapp
+                docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                '''
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                sh '''
+                docker rm -f ${CONTAINER_NAME} || true
+                '''
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh '''
+                docker run -d \
+                  --name ${CONTAINER_NAME} \
+                  --rm -p ${APP_PORT}:${APP_PORT} \
+                  ${IMAGE_NAME}:${IMAGE_TAG}
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Calculator app deployed successfully!"
+            echo "🌐 Access: http://<JENKINS_SERVER_IP>:3001"
+        }
+        failure {
+            echo "❌ Pipeline failed"
+        }
+    }
+}
+
+
+Project 3: random-quote-app
+
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'node20'
+    }
+
+    environment {
+        IMAGE_NAME = "random-quote-app"
+        IMAGE_TAG  = "v1"
+        CONTAINER_NAME = "random-quote-app"
+        APP_PORT = "3003"
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    credentialsId: 'github-pat',
+                    url: 'https://github.com/karthikraj98/Docker_project.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                  cd Projects/testproject
+                  npm install
+                '''
+            }
+        }
+
+        stage('SonarQube Scan') {
+            steps {
+                script {
+                    def scannerHome = tool 'sonar-scanner'
+                    withSonarQubeEnv('sonarqube') {
+                        sh """
+                          cd Projects/testproject
+                          ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=testproject \
+                            -Dsonar.projectName="Test Project" \
+                            -Dsonar.sources=. \
+                            -Dsonar.exclusions=node_modules/**,Dockerfile
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                  cd Projects/testproject
+                  docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                '''
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                sh 'docker rm -f ${CONTAINER_NAME} || true'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh '''
+                  docker run -d \
+                    --name ${CONTAINER_NAME} \
+                    --rm \
+                    -p ${APP_PORT}:${APP_PORT} \
+                    ${IMAGE_NAME}:${IMAGE_TAG}
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ App deployed successfully"
+        }
+        failure {
+            echo "❌ Pipeline failed"
+        }
+    }
+}
+
+
+
+Project 4: Springboot-Devops-Project
+
+springboot-devops-project/
+├── src/
+│   ├── main/java/com/example/demo/
+│   │   ├── controller/EmployeeController.java
+│   │   ├── service/EmployeeService.java
+│   │   └── DemoApplication.java
+│   └── test/java/com/example/demo/
+│       └── DemoApplicationTests.java
+├── pom.xml
+├── Dockerfile
+├── Jenkinsfile
+└── README.md
+
+
+tree springboot-devops-project/
+springboot-devops-project/
+├── Dockerfile
+├── pom.xml
+├── Readme.md
+└── src
+    ├── main
+    │   ├── controller
+    │   │   └── EmployeeController.java
+    │   ├── DemoApplication.java
+    │   └── service
+    │       └── EmployeeService.java
+    └── test
+        └── DemoApplicationTests.java
+
+5 directories, 7 files
+		
+
+pipeline {
+    agent any
+
+    tools {
+        jdk 'jdk17'
+        maven 'maven3'
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/yourname/springboot-devops-project.git'
+            }
+        }
+
+        stage('Build with Maven') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('SonarQube Scan') {
+            steps {
+                withSonarQubeEnv('sonarqube-server') {
+                    sh '''
+                    mvn sonar:sonar \
+                    -Dsonar.projectKey=springboot-devops \
+                    -Dsonar.login=SONAR_TOKEN
+                    '''
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t springboot-devops-app:1.0 .'
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                sh '''
+                docker stop springboot || true
+                docker rm springboot || true
+                docker run -d --name springboot -p 8080:8080 springboot-devops-app:1.0
+                '''
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+   stage ('Quality Gate') {
+            steps {
+                timeout(time: 5 , unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
