@@ -253,89 +253,65 @@ springboot-devops-project/
 
 pipeline {
     agent any
-
+    
     tools {
         jdk 'jdk17'
         maven 'maven3'
     }
-
+    
     stages {
-
-        stage('Checkout Code') {
+        stage ('checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/yourname/springboot-devops-project.git'
+                url: 'https://github.com/karthikraj98/Docker_project.git'
             }
         }
-
-        stage('Build with Maven') {
+        
+        stage ('build the maven') {
             steps {
+                dir('Projects/springboot-devops-project') {
                 sh 'mvn clean package'
+                }
             }
         }
-
+        
         stage('SonarQube Scan') {
+    steps {
+        dir('Projects/springboot-devops-project') {
+
+            withSonarQubeEnv('SonarQube') {   // MUST match Jenkins config name
+                withCredentials([
+                    string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')
+                ]) {
+                    sh """
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=springboot-devops \
+                        -Dsonar.projectName=springboot-devops \
+                        -Dsonar.login=${SONAR_TOKEN}
+                    """
+                }
+            }
+
+        }
+    }
+}
+        
+        stage ('Build contianer image') {
             steps {
-                withSonarQubeEnv('sonarqube-server') {
-                    sh '''
-                    mvn sonar:sonar \
-                    -Dsonar.projectKey=springboot-devops \
-                    -Dsonar.login=SONAR_TOKEN
-                    '''
+                dir('Projects/springboot-devops-project') {
+                sh 'docker build -t springboot-devops:01 .' 
                 }
             }
         }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t springboot-devops-app:1.0 .'
-            }
-        }
-
-        stage('Deploy Container') {
+        
+        stage ('Deploy container') {
             steps {
                 sh '''
-                docker stop springboot || true
-                docker rm springboot || true
-                docker run -d --name springboot -p 8080:8080 springboot-devops-app:1.0
+                docker stop springboot || true 
+                docker rm springboot || true 
+                docker run -d --name springboot --rm -p 3004:8080 springboot-devops:01
                 '''
             }
         }
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ }
