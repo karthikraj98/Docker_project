@@ -44,7 +44,7 @@ pipeline {
             sh '''
             docker stop java-gui-app || true
             docker rm java-gui-app || true
-            docker run --name java-gui-app -p 3005:3005 java-gui-app:v1
+            docker run -d --name java-gui-app -p 3005:3005 java-gui-app:v1
             '''
         }
     }
