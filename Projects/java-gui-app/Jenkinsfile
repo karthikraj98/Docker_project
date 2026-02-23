@@ -12,12 +12,6 @@ pipeline {
 
    stages {
 
-    stage('checkout') {
-        steps {
-            git https://github.com/karthikraj98/Docker_project.git
-        }
-    }
-
     stage('build with maven') {
         steps {
             dir('Projects/java-gui-app') {
