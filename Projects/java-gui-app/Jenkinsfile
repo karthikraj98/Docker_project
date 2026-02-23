@@ -33,8 +33,10 @@ pipeline {
 
     stage('Build docker images') {
         steps {
+           dir('Projects/java-gui-app') {
             sh 'docker build -t java-gui-app:v1 .'
         }
+      }     
     }
 
     stage('Run container') {
