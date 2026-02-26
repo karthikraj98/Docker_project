@@ -1,0 +1,49 @@
+Odoo & ERP Administration :
+
+Installed, configured, and managed Odoo in testing and production environments.
+
+Deployed and managed custom Odoo modules across multiple environments.
+
+Implemented Odoo worker configuration and optimized memory parameters (limit_memory_soft, limit_memory_hard) for performance tuning.
+
+Performed production troubleshooting and performance optimization for ERP systems.
+
+
+PostgreSQL Database Administration :
+
+Configured and tuned PostgreSQL parameters based on Odoo worker architecture.
+
+Implemented automated database backups using cron jobs and validated restore procedures.
+
+Configured PgBouncer for connection pooling and optimized database connection handling.
+
+Implemented basic streaming replication setup and configured WAL archiving.
+
+Performed Point-in-Time Recovery (PITR) testing and demonstrated disaster recovery scenarios.
+
+
+Web & Infrastructure Management :
+
+Deployed and configured NGINX as a reverse proxy for Odoo in local, testing, and production environments.
+
+Managed environment separation (development, testing, production) for ERP deployments.
+
+Ensured high availability and performance optimization at the web and database layers.
+
+
+Monitoring & Observability :
+
+Installed and configured Prometheus for system and database monitoring.
+
+Designed dashboards in Grafana to visualize server, PostgreSQL, and application metrics.
+
+Monitored CPU, memory, disk I/O, and database performance metrics to ensure production stability.
+
+
+Containerization & Automation :
+
+Demonstrated containerized deployment of Odoo using Docker.
+
+Automated routine maintenance tasks using cron jobs and shell scripting.
+
+Maintained Linux servers ensuring uptime, security updates, and system performance optimization.
