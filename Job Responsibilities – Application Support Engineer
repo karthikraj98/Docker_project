@@ -1,0 +1,15 @@
+Install, configure, and maintain Odoo 16, 17, and 18 (both Community and Enterprise editions) across multiple environments.
+Create, manage, and optimize Odoo databases to ensure reliability, performance, and secure access.
+Develop, customize, and troubleshoot Odoo addons to support business-specific processes and integrations.
+Configure and fine-tune Odoo workers, multiprocessing, and longpolling services to enhance application performance and scalability.
+Implement automated daily backup scripts for Odoo databases and custom addons, ensuring data safety and disaster recovery readiness.
+Perform weekly manual verification of backups and test restores to validate data integrity and recovery capability.
+Install, configure, and optimize Prometheus, Grafana, and PgBouncer for system monitoring, connection pooling, and performance visibility.
+Deploy and manage NGINX as a reverse proxy for Odoo servers, including SSL setup, caching, and load balancing configurations.
+Install, configure, and maintain PostgreSQL databases with replication, tuning, and version upgrades for high availability and stability.
+Provide L2/L3 technical support for Odoo environments — diagnosing performance bottlenecks, functional errors, and infrastructure-related issues.
+Collaborate with development and DevOps teams to deploy updates, manage CI/CD workflows, and automate maintenance tasks using Ansible and Jenkins.
+Continuously monitor server performance and system logs to proactively identify and resolve potential issues.
+Maintain server and application security through configuration hardening, timely patching, and periodic health checks.
+Document deployment procedures, configurations, and troubleshooting guides to support knowledge sharing and operational consistency.
+Provide technical guidance and user training to clients and internal teams on Odoo deployment, optimization, and maintenance best practices.
